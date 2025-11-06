@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Données (Propriétaire)</title>
+</head>
+<body>
+    <h1>Vos Données Stockées</h1>
+    <p>Liste des fichiers stockés. Cliquez sur "Télécharger" pour récupérer un fichier.</p>
+    
+    {% if files %}
+        <ul>
+            {% for file in files %}
+                <li>
+                    <strong>{{ file }}</strong> 
+                    (<small>Taille : {{ (gmt(file) / 1024 / 1024)|round(2) }} Mo</small>)
+                    <a href="{{ url_for('download_file', filename=file) }}"> [Télécharger]</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun fichier n'a encore été téléversé.</p>
+    {% endif %}
+
+    <hr>
+    <a href="{{ url_for('generate_qr') }}">Retour au QR Code</a>
+    
+    {% endblock %}
+</body>
+</html>
+
+{% macro gmt(file) %}
+    {{ os.path.getsize(g.app.config['UPLOAD_FOLDER'] + '/' + file) }}
+{% endmacro %}
